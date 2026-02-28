@@ -1,279 +1,266 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>اختبار يد التحكم - Gamepad Pro Tester</title>
-  <style>
-    /* ======================= أسلوب عام ديناميكي ======================= */
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: radial-gradient(circle at top left, #0f0f0f 0%, #1a1a1a 100%);
-      color: #f0f0f0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 0;
-      padding: 20px;
-      overflow-x: hidden;
-      animation: backgroundShift 20s infinite alternate;
-    }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اختبار يد التحكم - Gamepad Pro Tester</title>
+  
+  <style>
+    /* ======================= أسلوب عام ديناميكي ======================= */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: radial-gradient(circle at top left, #0f0f0f 0%, #1a1a1a 100%);
+      color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+      overflow-x: hidden;
+      animation: backgroundShift 20s infinite alternate;
+    }
 
-    @keyframes backgroundShift {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 100% 50%; }
-    }
+    @keyframes backgroundShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
 
-    h1 {
-      margin-bottom: 15px;
-      color: #00ffff;
-      text-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff33;
-      font-size: 36px;
-      animation: glow 2s infinite alternate;
-    }
+    h1 {
+      margin-bottom: 15px;
+      color: #00ffff;
+      text-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff33;
+      font-size: clamp(24px, 5vw, 36px);
+      animation: glow 2s infinite alternate;
+      text-align: center;
+    }
 
-    @keyframes glow {
-      0% { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff33; }
-      100% { text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff55; }
-    }
+    @keyframes glow {
+      0% { text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff33; }
+      100% { text-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff55; }
+    }
 
-    /* ======================= معلومات اليد ======================= */
-    #gamepad-info {
-      text-align: center;
-      margin-bottom: 20px;
-      font-size: 17px;
-      line-height: 1.5;
-    }
-    #gamepad-info span {
-      font-weight: bold;
-      color: #00ffcc;
-      text-shadow: 0 0 5px #00ffcc88;
-    }
+    /* ======================= تنسيق مساحات الإعلانات ======================= */
+    .ad-slot {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px dashed #444;
+      margin: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 90px;
+      width: 100%;
+      max-width: 728px;
+      color: #666;
+      font-size: 12px;
+    }
 
-    /* ======================= الأزرار ======================= */
-    #buttons {
-      display: grid;
-      grid-template-columns: repeat(8, 70px);
-      grid-gap: 12px;
-      justify-content: center;
-      margin-bottom: 25px;
-      perspective: 800px;
-    }
+    /* ======================= معلومات اليد ======================= */
+    #gamepad-info {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 17px;
+      line-height: 1.5;
+    }
+    #gamepad-info span {
+      font-weight: bold;
+      color: #00ffcc;
+      text-shadow: 0 0 5px #00ffcc88;
+    }
 
-    .button {
-      width: 70px;
-      height: 70px;
-      background-color: #222;
-      border-radius: 15px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: 0.1s all;
-      font-weight: bold;
-      color: #fff;
-      user-select: none;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.7), 0 0 15px #00ffff22 inset;
-      transform-style: preserve-3d;
-    }
+    /* ======================= الأزرار ======================= */
+    #buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+      max-width: 600px;
+      width: 100%;
+      grid-gap: 12px;
+      justify-content: center;
+      margin-bottom: 25px;
+      perspective: 800px;
+    }
 
-    .button.active {
-      background: linear-gradient(145deg, #00ffcc, #00ffaa);
-      transform: scale(1.2) rotateX(10deg) rotateY(10deg);
-      box-shadow: 0 0 25px #00ffcc, 0 0 50px #00ffaa inset;
-    }
+    .button {
+      width: 60px;
+      height: 60px;
+      background-color: #222;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.1s all;
+      font-weight: bold;
+      color: #fff;
+      user-select: none;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.7), 0 0 15px #00ffff22 inset;
+      transform-style: preserve-3d;
+      margin: auto;
+    }
 
-    /* ======================= العصي التناظرية ======================= */
-    #sticks {
-      display: flex;
-      justify-content: center;
-      gap: 80px;
-      margin-bottom: 25px;
-    }
+    .button.active {
+      background: linear-gradient(145deg, #00ffcc, #00ffaa);
+      transform: scale(1.1) rotateX(10deg);
+      box-shadow: 0 0 25px #00ffcc;
+    }
 
-    .stick {
-      width: 230px;
-      height: 230px;
-      background-color: #111;
-      border-radius: 50%;
-      position: relative;
-      box-shadow: inset 0 0 20px rgba(0,255,255,0.2), 0 5px 15px rgba(0,0,0,0.7);
-      transition: 0.1s;
-    }
+    /* ======================= العصي التناظرية ======================= */
+    #sticks {
+      display: flex;
+      justify-content: center;
+      gap: clamp(20px, 10vw, 80px);
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+    }
 
-    .stick-dot {
-      width: 28px;
-      height: 28px;
-      background: radial-gradient(circle, #ff0000, #ff5555);
-      border-radius: 50%;
-      position: absolute;
-      top: 101px;
-      left: 101px;
-      transform: translate(0,0);
-      transition: transform 0.05s linear;
-      box-shadow: 0 0 12px #ff0000, 0 0 20px #ff4444aa inset;
-    }
+    .stick {
+      width: 180px;
+      height: 180px;
+      background-color: #111;
+      border-radius: 50%;
+      position: relative;
+      box-shadow: inset 0 0 20px rgba(0,255,255,0.2), 0 5px 15px rgba(0,0,0,0.7);
+    }
 
-    /* ======================= المشغلات L1,L2,R1,R2 ======================= */
-    #triggers {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-    }
+    .stick-dot {
+      width: 24px;
+      height: 24px;
+      background: radial-gradient(circle, #ff0000, #ff5555);
+      border-radius: 50%;
+      position: absolute;
+      top: 78px;
+      left: 78px;
+      box-shadow: 0 0 12px #ff0000;
+    }
 
-    .trigger {
-      width: 90px;
-      height: 35px;
-      border-radius: 8px;
-      background: #333;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: #fff;
-      box-shadow: inset 0 0 10px rgba(0,255,255,0.2), 0 5px 15px rgba(0,0,0,0.7);
-      font-size: 15px;
-      perspective: 500px;
-      transition: transform 0.1s;
-    }
+    /* ======================= المشغلات والتحكم ======================= */
+    #triggers { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+    .trigger { width: 80px; height: 35px; border-radius: 8px; background: #333; position: relative; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; overflow: hidden; }
+    .trigger-fill { height: 100%; background: linear-gradient(90deg, #00ffff, #00ffaa); width: 0%; position: absolute; top: 0; left: 0; z-index: 0; }
+    .trigger span { z-index: 1; }
 
-    .trigger-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #00ffff, #00ffaa);
-      width: 0%;
-      border-radius: 8px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      transition: width 0.05s linear;
-      z-index: -1;
-      box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffaa inset;
-    }
+    #controls { display: flex; justify-content: center; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; }
+    button.control-btn { padding: 12px 25px; cursor: pointer; border: none; border-radius: 8px; background: #0066ff; color: #fff; font-weight: bold; transition: 0.2s; }
+    button.control-btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px #0066ff88; }
 
-    /* ======================= زر الاهتزاز + الإضافات ======================= */
-    #controls {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 25px;
-      flex-wrap: wrap;
-    }
-
-    button.control-btn {
-      padding: 14px 30px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 8px;
-      background: linear-gradient(135deg,#0066ff,#00aaff);
-      color: #fff;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.6);
-      transition: 0.2s all;
-    }
-
-    button.control-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00aaff, 0 0 40px #00ffff;
-    }
-
-    /* ======================= معايرة الانحراف ======================= */
-    #calibration {
-      font-size: 16px;
-      text-align: center;
-      color: #ffcc00;
-      text-shadow: 0 0 8px #ffcc00;
-      margin-bottom: 25px;
-    }
-
-    /* ======================= Dashboard وهمي ======================= */
-    #dashboard {
-      width: 100%;
-      max-width: 950px;
-      background: #111;
-      border-radius: 15px;
-      padding: 25px;
-      box-shadow: 0 0 30px rgba(0,255,255,0.3);
-      margin-bottom: 40px;
-      transform-style: preserve-3d;
-      animation: dashGlow 3s infinite alternate;
-    }
-
-    @keyframes dashGlow {
-      0% { box-shadow: 0 0 30px rgba(0,255,255,0.2); }
-      100% { box-shadow: 0 0 60px rgba(0,255,255,0.5); }
-    }
-
-    #dashboard h2 {
-      color: #00ffff;
-      margin-bottom: 18px;
-      font-size: 24px;
-      text-shadow: 0 0 8px #00ffff;
-    }
-
-    .dash-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 14px;
-    }
-
-    .dash-label { color: #fff; }
-    .dash-value { color: #00ffcc; font-weight: bold; text-shadow: 0 0 5px #00ffcc; }
-
-  </style>
+    #dashboard { width: 100%; max-width: 800px; background: #111; border-radius: 15px; padding: 20px; box-shadow: 0 0 20px rgba(0,255,255,0.1); }
+    .dash-row { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #222; font-size: 13px; }
+    .dash-value { color: #00ffcc; }
+  </style>
 </head>
 <body>
-  <h1>اختبار يد التحكم - Gamepad Pro Tester</h1>
 
-  <div id="gamepad-info">
-    <p>الحالة: <span id="connection-status">غير متصلة</span></p>
-    <p>اسم اليد: <span id="gamepad-name">-</span></p>
-    <p>عدد الأزرار: <span id="button-count">-</span> | عدد العصي: <span id="axis-count">-</span></p>
-  </div>
+  <h1>اختبار يد التحكم - Gamepad Pro Tester</h1>
 
-  <div id="buttons"></div>
+  <div class="ad-slot">
+    <span>مساحة إعلانية - Ad Space</span>
+  </div>
 
-  <div id="sticks">
-    <div class="stick" id="left-stick"><div class="stick-dot" id="left-dot"></div></div>
-    <div class="stick" id="right-stick"><div class="stick-dot" id="right-dot"></div></div>
-  </div>
+  <div id="gamepad-info">
+    <p>الحالة: <span id="connection-status">يرجى الضغط على أي زر في يد التحكم...</span></p>
+    <p>الاسم: <span id="gamepad-name">-</span></p>
+  </div>
 
-  <div id="triggers">
-    <div class="trigger">L1</div>
-    <div class="trigger">L2<div class="trigger-fill" id="l2-fill"></div></div>
-    <div class="trigger">R1</div>
-    <div class="trigger">R2<div class="trigger-fill" id="r2-fill"></div></div>
-  </div>
+  <div id="buttons"></div>
 
-  <div id="controls">
-    <button id="vibrate-btn" class="control-btn">اختبار الاهتزاز</button>
-    <button id="reset-btn" class="control-btn" style="background:#ff5555">إعادة ضبط المصنع</button>
-    <button id="speed-btn" class="control-btn" style="background:#ffaa00">تسريع الاستجابة</button>
-  </div>
+  <div class="ad-slot">
+    <span>مساحة إعلانية - Ad Space</span>
+  </div>
 
-  <div id="calibration">
-    <p>معايرة الانحراف: <span id="calibration-status">-</span></p>
-  </div>
+  <div id="sticks">
+    <div class="stick" id="left-stick"><div class="stick-dot" id="left-dot"></div></div>
+    <div class="stick" id="right-stick"><div class="stick-dot" id="right-dot"></div></div>
+  </div>
 
-  <div id="dashboard">
-    <h2>لوحة التحكم الداخلية</h2>
-    <div id="dash-buttons"></div>
-    <div id="dash-axes"></div>
-  </div>
+  <div id="triggers">
+    <div class="trigger"><span>L1</span><div class="trigger-fill" id="l1-fill"></div></div>
+    <div class="trigger"><span>L2</span><div class="trigger-fill" id="l2-fill"></div></div>
+    <div class="trigger"><span>R1</span><div class="trigger-fill" id="r1-fill"></div></div>
+    <div class="trigger"><span>R2</span><div class="trigger-fill" id="r2-fill"></div></div>
+  </div>
 
-  <script>
-    let gamepadIndex = null;
-    const buttonsContainer = document.getElementById('buttons');
-    const leftDot = document.getElementById('left-dot');
-    const rightDot = document.getElementById('right-dot');
-    const l2Fill = document.getElementById('l2-fill');
-    const r2Fill = document.getElementById('r2-fill');
-    const statusEl = document.getElementById('connection-status');
-    const nameEl = document.getElementById('gamepad-name');
-    const buttonCountEl = document.getElementById('button-count');
-    const axisCountEl = document.getElementById('axis-count');
-    const calibrationStatus = document.getElementById('calibration-status');
-    const dashButtons = document.getElementById('dash-buttons');
-    const dashAxes 
+  <div id="controls">
+    <button id="vibrate-btn" class="control-btn">اختبار الاهتزاز</button>
+    <button id="reset-btn" class="control-btn" style="background:#ff5555">إعادة تعيين</button>
+  </div>
+
+  <div id="dashboard">
+    <h2 style="color: #00ffff; font-size: 18px;">البيانات التقنية الحية:</h2>
+    <div id="dash-axes"></div>
+  </div>
+
+  <div class="ad-slot">
+    <span>مساحة إعلانية - Ad Space</span>
+  </div>
+
+  <script>
+    let gamepadIndex = null;
+    const buttonsContainer = document.getElementById('buttons');
+    const leftDot = document.getElementById('left-dot');
+    const rightDot = document.getElementById('right-dot');
+    
+    window.addEventListener("gamepadconnected", (e) => {
+      gamepadIndex = e.gamepad.index;
+      document.getElementById('connection-status').textContent = "متصلة";
+      document.getElementById('gamepad-name').textContent = e.gamepad.id;
+      createButtons(e.gamepad.buttons.length);
+    });
+
+    window.addEventListener("gamepaddisconnected", () => {
+      gamepadIndex = null;
+      document.getElementById('connection-status').textContent = "مفصولة";
+      buttonsContainer.innerHTML = "";
+    });
+
+    function createButtons(count) {
+      buttonsContainer.innerHTML = "";
+      for(let i=0; i<count; i++) {
+        let btn = document.createElement("div");
+        btn.classList.add("button");
+        btn.id = "btn-" + i;
+        btn.textContent = i;
+        buttonsContainer.appendChild(btn);
+      }
+    }
+
+    function updateGamepad() {
+      if(gamepadIndex !== null) {
+        const gp = navigator.getGamepads()[gamepadIndex];
+        if(!gp) return;
+
+        // تحديث الأزرار
+        gp.buttons.forEach((b, i) => {
+          const btnEl = document.getElementById("btn-" + i);
+          if(btnEl) {
+            btnEl.classList.toggle("active", b.pressed);
+            // تأثير للمشغلات
+            if(i === 6) document.getElementById('l2-fill').style.width = (b.value * 100) + "%";
+            if(i === 7) document.getElementById('r2-fill').style.width = (b.value * 100) + "%";
+            if(i === 4) document.getElementById('l1-fill').style.width = b.pressed ? "100%" : "0%";
+            if(i === 5) document.getElementById('r1-fill').style.width = b.pressed ? "100%" : "0%";
+          }
+        });
+
+        // تحديث العصي (Sticks)
+        const scale = 70;
+        leftDot.style.transform = `translate(${gp.axes[0] * scale}px, ${gp.axes[1] * scale}px)`;
+        rightDot.style.transform = `translate(${gp.axes[2] * scale}px, ${gp.axes[3] * scale}px)`;
+
+        // تحديث لوحة البيانات
+        let axesHTML = "";
+        gp.axes.forEach((a, i) => {
+          axesHTML += `<div class="dash-row"><span>محور (Axis) ${i}</span><span class="dash-value">${a.toFixed(4)}</span></div>`;
+        });
+        document.getElementById('dash-axes').innerHTML = axesHTML;
+      }
+      requestAnimationFrame(updateGamepad);
+    }
+    updateGamepad();
+
+    document.getElementById('vibrate-btn').addEventListener('click', () => {
+      const gp = navigator.getGamepads()[gamepadIndex];
+      if(gp && gp.vibrationActuator) {
+        gp.vibrationActuator.playEffect("dual-rumble", { duration: 500, strongMagnitude: 1.0, weakMagnitude: 1.0 });
+      }
+    });
+  </script>
+</body>
+</html>
